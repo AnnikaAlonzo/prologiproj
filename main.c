@@ -22,9 +22,8 @@ int main(int argc, const char * argv[]) {
     
     studentLogin();
     option();
-    payEnrollmentFees();
     
-    printf("end\n");
+    printf("\nend\n");
     
 }
 
@@ -70,6 +69,20 @@ void option() {
     
     printf("\tInput choice: ");
     scanf("%d", &userChoice);
+    
+    if (userChoice == 1) {
+        
+        payEnrollmentFees();
+        
+    } else if (userChoice == 2) {
+        
+        printf("di ko pa nagawa to");
+        
+    } else {
+        
+        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+        
+    }
     
 }
 
