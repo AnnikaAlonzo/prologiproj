@@ -9,9 +9,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "studentIDCheck.h"
+#include "tuitionCalculation.h"
 
 void studentLogin(void);
 void option(void);
+void payEnrollmentFees(void);
 
 int main(int argc, const char * argv[]) {
     
@@ -20,6 +22,7 @@ int main(int argc, const char * argv[]) {
     
     studentLogin();
     option();
+    payEnrollmentFees();
     
     printf("end\n");
     
@@ -35,7 +38,7 @@ void studentLogin() {
     printf("\tName: ");
     fgets(name, sizeof(name), stdin);
     
-    while(id == false) {
+    while (id == false) {
         printf("\tStudent ID: ");
         scanf("%d", &studentID);
         
@@ -70,3 +73,56 @@ void option() {
     
 }
 
+void payEnrollmentFees() {
+    
+    int numClasses, i;
+    char ch_arr[10];
+    const int totalFees = 16223;
+    int tuition = 46852;
+    int labFees = 0;
+    bool class = false;
+
+    
+    printf("\n\n=====Pay Enrollment Fees=====\n\n");
+    printf("You have chosen ‘Pay Enrollment Fees’\n");
+    
+    while (class == false) {
+        
+        printf("\n\nHow many courses will you be taking next term?");
+        printf("\nInput: ");
+        scanf("%d", &numClasses);
+        
+        if (numClasses >= 8 && numClasses <= 10) {
+            
+            printf("\n\nPlease list down the courses you are taking: ");
+            
+            for (i = 0; i < numClasses; i++){
+            
+                printf("\n> ");
+                scanf("%s", &ch_arr[i]);
+                
+                if (strcmp(&ch_arr[i], "lby") != 0 && strcmp(&ch_arr[i], "LBY") != 0){
+                    
+                    labFees += 0;
+                    
+                } else{
+                    
+                    labFees += 3600;
+                    
+                }
+                
+            }
+            class = true;
+            calculation(labFees, tuition, totalFees, numClasses);
+            
+            
+            printf("\n\nYour tuition for next term will be: ₱%d\n", calculation(labFees, tuition, totalFees, numClasses));
+            
+        } else {
+            
+            printf("The minimum number of classes is 8 and the maximum is 10.\n");
+            
+        }
+        
+    }
+}
