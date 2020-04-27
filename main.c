@@ -9,12 +9,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "studentIDCheck.h"
-#include "tuitionCalculation.h"
+#include <string.h>
 
 void studentLogin(void);
 void option(void);
 void payEnrollmentFees(void);
 void scholarship(void);
+int calculation(int, int, int, int);
 
 int main(int argc, const char * argv[]) {
     
@@ -24,7 +25,6 @@ int main(int argc, const char * argv[]) {
     studentLogin();
     option();
     
-    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
     
 }
 
@@ -60,7 +60,7 @@ void studentLogin() {
 
 void option() {
     
-    int userChoice;
+    char userChoice;
     
     printf("\n----------------------------------------------------------------\n\n");
     printf("Choose an option: \n");
@@ -69,20 +69,27 @@ void option() {
     printf("\t[3] Exit\n");
     
     printf("\tInput choice: ");
-    scanf("%d", &userChoice);
+    scanf("%s", &userChoice);
     
-    if (userChoice == 1) {
-        
-        payEnrollmentFees();
-        
-    } else if (userChoice == 2) {
-        
-        scholarship();
-        
-    } else {
-        
-        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
-        
+    switch(userChoice)
+    {
+        case '1':
+            payEnrollmentFees();
+            break;
+            
+        case '2':
+            scholarship();
+            break;
+            
+        case '3':
+            printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+            break;
+            
+        default:
+            printf("\n\nInvalid Input!");
+            option();
+            break;
+            
     }
     
 }
@@ -90,15 +97,16 @@ void option() {
 void payEnrollmentFees() {
     
     int numClasses, i;
-    char ch_arr[10];
+    float installment = 0;
+    char ch_arr[10], userInput, cardDetails, pinNum;
     const int totalFees = 16223;
-    int tuition = 46852;
+    float tuition = 46852;
     int labFees = 0;
     bool class = false;
 
     
     printf("\n\n=====Pay Enrollment Fees=====\n\n");
-    printf("You have chosen ‚ÄòPay Enrollment Fees‚Äô\n");
+    printf("You have chosen 'Pay Enrollment Fees'\n");
     
     while (class == false) {
         
@@ -127,10 +135,181 @@ void payEnrollmentFees() {
                 
             }
             class = true;
-            calculation(labFees, tuition, totalFees, numClasses);
+            tuition = calculation(labFees, tuition, totalFees, numClasses);
             
+            tuitionCheck:
+            system("\n");
             
-            printf("\n\nYour tuition for next term will be: ‚Ç±%d\n", calculation(labFees, tuition, totalFees, numClasses));
+            printf("\n\nYour tuition for next term will be: PHP %.2f\n", tuition);
+            
+            back:
+            system("\n");
+            
+            printf("\n\nProceed to payment? [Y/N]");
+            printf("\n\tChoice: ");
+            scanf("%s", &userInput);
+            
+            if (userInput == 'Y' || userInput == 'y') {
+                
+                printf("\n----------------------------------------------------------------\n\n");
+                printf("Please choose the method of transaction: ");
+                printf("\n\t[1] Credit Card");
+                printf("\n\t[2] Debit Card");
+                printf("\n\tChoice: ");
+                scanf("%s", &userInput);
+                
+                printf("\nPlease enter the card details: ");
+                scanf("%s", &cardDetails);
+                
+                printf("\nPlease enter the pin number: ");
+                scanf("%s", &pinNum);
+                
+                payment:
+                system("\n");
+                
+                printf("\n\nChoose the method of payment: ");
+                printf("\n\t[1] Full Payment");
+                printf("\n\t[2] Installment Basis");
+                printf("\n\tChoice: ");
+                scanf("%s", &userInput);
+                
+                if (userInput == '1') {
+                    
+                    printf("\nYou have chosen ‘Full Payment’");
+                    
+                    fpayment:
+                    system("\n");
+                    
+//                    tuition = calculation(labFees, tuition, totalFees, numClasses);
+                    printf("\n\nTotal cost of tuition: PHP %.2f", tuition);
+                    printf("\n\tConfirmation: Y/N");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &userInput);
+                    
+                    if (userInput == 'Y' || userInput == 'y') {
+                        
+                        tuition -= tuition;
+                        printf("\nRemaining balance is: PHP %.2f\n", tuition);
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    } else if (userInput == 'N' || userInput == 'n') {
+                        
+                        goto tuitionCheck;
+                        
+                    } else {
+                        
+                        printf("\n\nInvalid Input!\n");
+                        goto fpayment;
+                        
+                    }
+                    
+                } else if (userInput == '2') {
+                    
+                    printf("\nYou have chosen ‘Installment Basis’");
+                    
+                    ibasis:
+                    system("\n");
+                    
+//                    tuition = calculation(labFees, tuition, totalFees, numClasses);
+                    printf("\n\nChoose the amount you are going to pay: ");
+                    printf("\n\t[1] 50 percent");
+                    printf("\n\t[2] 60 percent");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &userInput);
+                    
+                    if (userInput == '1') {
+                        
+                        installment = tuition - (tuition * .5);
+                        printf("\nTotal cost of tuition: PHP %.2f", tuition);
+                        printf("\n\tConfirmation: Y/N");
+                        printf("\n\tChoice: ");
+                        scanf("%s", &userInput);
+                        
+                        if (userInput == 'Y' || userInput == 'y') {
+                            
+                            printf("\nYou will be paying PHP %.2f upfront, and another PHP %.2f before or during the middle of the term.", installment, installment);
+                            printf("\n\nRemaining balance is: PHP %.2f\n", tuition - installment);
+                            printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                            break;
+                            
+                        } else if (userInput == 'N' || userInput == 'n') {
+                            
+                            goto tuitionCheck;
+                            
+                        } else {
+                            
+                            printf("\n\nInvalid Input!\n");
+                            goto ibasis;
+                            
+                        }
+                    } else if (userInput == '2') {
+                        
+                        installment = tuition - (tuition * .6);
+                        printf("\nTotal cost of tuition: PHP %.2f", tuition);
+                        printf("\n\tConfirmation: Y/N");
+                        printf("\n\tChoice: ");
+                        scanf("%s", &userInput);
+                        
+                        if (userInput == 'Y' || userInput == 'y') {
+                            
+                            printf("\nYou will be paying PHP %.2f upfront, and another PHP %.2f before or during the middle of the term.", tuition - installment, installment);
+                            printf("\n\nRemaining balance is: PHP %.2f\n", installment);
+                            printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                            break;
+                            
+                        } else if (userInput == 'N' || userInput == 'n') {
+                            
+                            goto tuitionCheck;
+                            
+                        } else {
+                            
+                            printf("\n\nInvalid Input!\n");
+                            goto payment;
+                            
+                        }
+                        
+                    }
+                    
+                } else {
+                    
+                    printf("\n\nInvalid Input!\n");
+                    goto payment;
+                    
+                }
+                
+                
+            } else if (userInput == 'N' || userInput == 'n') {
+                
+                jump:
+                system("\n");
+                
+                printf("\nWould you like to go back to the options menu? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &userInput);
+                
+                if (userInput == 'Y' || userInput == 'y') {
+                    
+                    option();
+                    
+                } else if (userInput == 'N' || userInput == 'n') {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                } else {
+                    
+                    printf("\nInvalid Input!");
+                    goto jump;
+                    
+                }
+                
+            } else {
+                
+                printf("\nInvalid Input!");
+                goto back;
+                
+            }
             
         } else {
             
@@ -141,15 +320,40 @@ void payEnrollmentFees() {
     }
 }
 
+int calculation(int a, int b, int c, int numClasses) {
+    
+    int total = 0;
+    
+    if (numClasses == 8) {
+        
+        total = a + b + c;
+        
+    } else if (numClasses == 9) {
+        
+        b += 10812;
+        total = a + b + c;
+        
+    } else {
+        
+        b += 21624;
+        total = a + b + c;
+        
+    }
+    
+    return total;
+
+}
+
+
 void scholarship()
 {
     int choice, income;
-    char YesNo;
+    char yesNo;
 
     printf("\n\n=====Scholarship Pre-Evaluation=====\n\n");
     printf("\nYou have chosen Scholarship Pre-Evaluation\n");
     jump:
-    system("\nPAUSE");
+    system("\n");
     
 
     printf("\n----------------------------------------------------------------------\n\n");
@@ -186,30 +390,64 @@ void scholarship()
             printf(" (tuition and fees) starting in their freshman year.");
             
             printf("\n\nWere you ranked top 1 (with highest honors) for STEM/ABM/HUMMS in a La Salle district high school? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
                 
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
                 printf("\n\nDid you pass the entrance exam? [Y/N]");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
-                    printf("\nYou are qualified for this scholarship, you may proceed to filling out the forms!");
+                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                     break;
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             
         case 2:
@@ -222,43 +460,95 @@ void scholarship()
             printf(" a Philippine Private/Public and Science High Schools based on");
             printf(" the Weighted Admission.");
             printf("\n2. Must be a Filipino citizen.");
-            printf("\n\nDid you graduate from a Philippine Private/Public school or a Science High School?  [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            printf("\n\nDid you graduate from a Philippine Private/Public school or a Science High School?  [Y/N]");
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
+            
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
-                printf("\n\nAre you among the top examinees of the DLSU College Admission Test?  [Y/N]");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\nAre you among the top examinees of the DLSU College Admission Test?  [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
                     printf("\nAre you a Filipino Citizen? [Y/N]");
-                    printf("\nChoice: ");
-                    scanf("%s", &YesNo);
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
                     
-                    if ((YesNo == 'Y') || (YesNo == 'y'))
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
                     {
-                        printf("\nYou are qualified for this scholarship, you may proceed to filling out the forms!");
+                        printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                         break;
                     }
-                    else if ((YesNo == 'N') || (YesNo == 'n'))
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
                     {
                         printf("\nYou are not qualified for this scholarship.");
-                        break;
+                        
+                        printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                        printf("\n\tChoice: ");
+                        scanf("%s", &yesNo);
+                        
+                        if ((yesNo == 'Y') || (yesNo == 'y'))
+                        {
+                            
+                            goto jump;
+                            
+                        }
+                        else if ((yesNo == 'N') || (yesNo == 'n'))
+                        {
+                            
+                            printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                            break;
+                            
+                        }
                     }
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                     {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             
         case 3:
@@ -275,13 +565,30 @@ void scholarship()
             
             if (income < 700000)
             {
-                printf("\nYou are qualified for this scholarship, you may proceed to filling out the forms!");
+                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                 break;
             }
             else
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 4:
@@ -293,18 +600,35 @@ void scholarship()
             printf(" the College of Law on full scholarship after finishing their undergraduate degree.");
             
             printf("\n\nDo you fit into this Scholarship Program? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
-                printf("\nYou are qualified for this scholarship, you may proceed to filling out the forms!");
+                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                 break;
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 5:
@@ -315,18 +639,35 @@ void scholarship()
             printf(" Lasallian education through any baccalaureate degree program at DLSU.");
             
             printf("\n\nDid you graduate from a public secondary school? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
-                printf("\nYou are qualified for this scholarship, you may proceed to securing the examination form!");
+                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                 break;
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 6:
@@ -337,18 +678,35 @@ void scholarship()
             printf(" privileges are full tuition and fees waiver, monthly stipend, and book allowance.");
             
             printf("\n\nDo you wish to pursue a field of study in any undergraduate engineering degree program as offered by the college? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
-                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!");
+                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                 break;
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 7:
@@ -365,30 +723,64 @@ void scholarship()
             printf(" La Salle University.");
             
             printf("\n\nDo you have parents that are permanent and full-time faculty or administrative service personnel who joined DLSU in May 1987 or after and have served the University for at least three years and are in active University Service? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
                 printf("\nHave you passed in any of the schools listed above? ");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
-                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!");
+                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                     break;
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 8:
@@ -401,30 +793,64 @@ void scholarship()
             printf(" qualify for the scholarship that is only offered at DLSU-Manila.");
             
             printf("\n\nDo you have (a) parent(s) that are full-time permanent faculty of the university? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
                 printf("\nHave you passed the DLSU entrance requirements? ");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
-                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!");
+                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                     break;
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 9:
@@ -436,30 +862,64 @@ void scholarship()
             printf(" or De La Salle Santiago-Zobel School.");
             
             printf("\n\nDo you have a parent that is a full-time, part-time, or retired faculty member who joined DLSU before May 1987? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
                 printf("\nHave you passed the entrance requirements of any of the schools listed above? ");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
-                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!");
+                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                     break;
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 10:
@@ -468,29 +928,63 @@ void scholarship()
             printf(" Their children should have passed the entrance requirements of De La Salle University.");
             
             printf("\n\nAre you a dependent of a Co-Academic Personnel? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
                 printf("\nHave you passed the entrance requirements in De La Salle University? [Y/N]");
-                printf("\nChoice: ");
-                scanf("%s", &YesNo);
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
                 
-                if ((YesNo == 'Y') || (YesNo == 'y'))
+                if ((yesNo == 'Y') || (yesNo == 'y'))
                 {
-                    printf("\nYou are qualified for this scholarship, you may proceed to the application portion!");
+                    printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                     break;
                 }
-                else if ((YesNo == 'N') || (YesNo == 'n'))
+                else if ((yesNo == 'N') || (yesNo == 'n'))
                 {
                     printf("\nYou are not qualified for this scholarship.");
-                    break;
+                    
+                    printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                    printf("\n\tChoice: ");
+                    scanf("%s", &yesNo);
+                    
+                    if ((yesNo == 'Y') || (yesNo == 'y'))
+                    {
+                        
+                        goto jump;
+                        
+                    }
+                    else if ((yesNo == 'N') || (yesNo == 'n'))
+                    {
+                        
+                        printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                        break;
+                        
+                    }
                 }
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         case 11:
@@ -500,18 +994,35 @@ void scholarship()
             printf(" of duty. Scholars in this program will be exempted from the payment of tuition.");
             
             printf("\n\nDo you have any relative who are military personnel who died or became incapacitated in the line of duty? [Y/N]");
-            printf("\nChoice: ");
-            scanf("%s", &YesNo);
+            printf("\n\tChoice: ");
+            scanf("%s", &yesNo);
             
-            if ((YesNo == 'Y') || (YesNo == 'y'))
+            if ((yesNo == 'Y') || (yesNo == 'y'))
             {
-                printf("\nYou are qualified for this scholarship, you may proceed to the application portion!");
+                printf("\nYou are qualified for this scholarship, you may proceed to securing the application portion!\n");
                 break;
             }
-            else if ((YesNo == 'N') || (YesNo == 'n'))
+            else if ((yesNo == 'N') || (yesNo == 'n'))
             {
                 printf("\nYou are not qualified for this scholarship.");
-                break;
+                
+                printf("\n\nWould you like to look at another scholarship program? [Y/N]");
+                printf("\n\tChoice: ");
+                scanf("%s", &yesNo);
+                
+                if ((yesNo == 'Y') || (yesNo == 'y'))
+                {
+                    
+                    goto jump;
+                    
+                }
+                else if ((yesNo == 'N') || (yesNo == 'n'))
+                {
+                    
+                    printf("\n\nThank you for using our Online Tuition Fee Payment and Scholarship Pre-Evaluation!\n");
+                    break;
+                    
+                }
             }
             
         default:
