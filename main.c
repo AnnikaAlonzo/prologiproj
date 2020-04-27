@@ -180,7 +180,6 @@ void payEnrollmentFees() {
                     fpayment:
                     system("\n");
                     
-//                    tuition = calculation(labFees, tuition, totalFees, numClasses);
                     printf("\n\nTotal cost of tuition: PHP %.2f", tuition);
                     printf("\n\tConfirmation: Y/N");
                     printf("\n\tChoice: ");
@@ -211,7 +210,6 @@ void payEnrollmentFees() {
                     ibasis:
                     system("\n");
                     
-//                    tuition = calculation(labFees, tuition, totalFees, numClasses);
                     printf("\n\nChoose the amount you are going to pay: ");
                     printf("\n\t[1] 50 percent");
                     printf("\n\t[2] 60 percent");
